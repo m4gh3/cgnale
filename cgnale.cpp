@@ -34,6 +34,24 @@ int subst_escape(int c)
 	}
 }
 
+std::string str_escape(std::string s)
+{
+	std::ostringstream ostr;
+	int i=0;
+	for(; i < s.size()-1; i++ )
+		if(s[i] != '\\')
+			ostr << s[i];
+		else
+			ostr << (char)subst_escape(s[++i]);
+	if( i < s.size() )
+		ostr << s[i];
+	return ostr.str();
+}
+
+std::string str_escape(char *s)
+{ return str_escape(std::string(s)); }
+
+
 void macro_parse(std::istream &istr, std::ostream &ostr )
 {
 
@@ -81,7 +99,7 @@ void macro_parse(std::istream &istr, std::ostream &ostr )
 	}
 	else
 	{
-		std::cerr << "Unknown macro name" << std::endl;
+		std::cerr << "Unknown macro name \"" << macro_args[0] << '\"' << std::endl;
 		exit(EXIT_FAILURE);
 	}
 
@@ -159,20 +177,24 @@ void load_lib(char *path)
 int main(int argc, char **argv )
 {
 
-	std::vector<std::ifstream> genfiles;
+	std::vector<std::istream *> genstreams;
 	std::vector<bool> genmodes;
 	int mode;
 
-	for(int option; (option = getopt(argc, argv, "c:f:l:" ) ) != -1; )
+	for(int option; (option = getopt(argc, argv, "c:f:l:s:" ) ) != -1; )
 	{
 		switch(option)
 		{
+			case 's':
+				genstreams.push_back(new std::istringstream(str_escape(optarg)));
+				genmodes.push_back(1);
+				break;
 			case 'c':
-				genfiles.push_back(std::ifstream(optarg));
+				genstreams.push_back(new std::ifstream(optarg));
 				genmodes.push_back(1);
 				break;
 			case 'f':
-				genfiles.push_back(std::ifstream(optarg));
+				genstreams.push_back(new std::ifstream(optarg));
 				genmodes.push_back(0);
 				break;
 			case 'l':
@@ -181,8 +203,8 @@ int main(int argc, char **argv )
 		}
 	}
 
-	for(int i=0; i < genfiles.size(); i++ )
-		normal_parse(genfiles[i], std::cout, genmodes[i] );
+	for(int i=0; i < genstreams.size(); i++ )
+		normal_parse(*genstreams[i], std::cout, genmodes[i] );
 
 	return 0;
 
