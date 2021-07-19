@@ -1,16 +1,14 @@
-#include <iostream>
-#include <map>
+#include "include/cgnale.hpp"
 #include <sstream>
 #include <fstream>
-#include <vector>
 #include <getopt.h>
 #include <dlfcn.h>
 
-typedef void macro_handler_t(std::ostream &ostr, std::vector<std::string> &macro_args, std::map<std::string, void *> &macro_states );
-#define macro_handler_decl(name) void name(std::ostream &ostr, std::vector<std::string> &macro_args, std::map<std::string, void *> &macro_states )
+/*typedef void macro_handler_t(std::ostream &ostr, std::vector<std::string> &macro_args, std::map<std::string, void *> &global_states );
+#define macro_handler_decl(name) void name(std::ostream &ostr, std::vector<std::string> &macro_args, std::map<std::string, void *> &global_states )*/
 
-std::map<std::string, macro_handler_t *> macro_handlers;
-std::map<std::string, void *> macro_states;
+std::map<std::string, macro_wrapper_base *> macro_handlers;
+std::map<std::string, void *> global_states;
 
 void check_eof(int c)
 {
@@ -95,7 +93,7 @@ void macro_parse(std::istream &istr, std::ostream &ostr )
 
 	if( handler != macro_handlers.end() )
 	{
-		(handler->second)(ostr, macro_args, macro_states );
+		(*(handler->second))(ostr, macro_args, global_states );
 	}
 	else
 	{
@@ -165,7 +163,7 @@ void load_lib(char *path)
 	
 	dlerror();
 	
-	std::vector<std::pair<std::string,macro_handler_t *>> (*cgnale_get_macros)();
+	std::vector<std::pair<std::string, macro_wrapper_base * >> (*cgnale_get_macros)();
 
 	*(void **) (&cgnale_get_macros) = dlsym(libhandle, "cgnale_get_macros" );
 
