@@ -5,6 +5,9 @@ struct cgnalec
 
 	std::vector<std::string> func_names;
 
+	macro_handler_decl(cgnale_macros_dataclass)
+	{ ostr << "struct macro_data\n{" << std::endl; }
+
 	macro_handler_decl(cgnale_macro_def)
 	{
 		if( args.size() < 2 )
@@ -41,6 +44,6 @@ struct cgnalec
 extern "C" std::vector<std::pair<std::string, macro_wrapper_base * >> cgnale_get_macros()
 {
 	cgnalec *data_obj = new cgnalec;
-	macro_wrapper<cgnalec> *wrappers_array = new macro_wrapper<cgnalec>[2]{ {data_obj, &cgnalec::cgnale_macro_def},  {data_obj, &cgnalec::cgnale_create_get_macros} };
-	return {{"cgnale.macro",wrappers_array}, {"cgnale.macros.get.create", wrappers_array+1}};
+	macro_wrapper<cgnalec> *wrappers_array = new macro_wrapper<cgnalec>[3]{ {data_obj, &cgnalec::cgnale_macros_dataclass}, {data_obj, &cgnalec::cgnale_macro_def},  {data_obj, &cgnalec::cgnale_create_get_macros} };
+	return {{"cgnale.macros.dataclass",wrappers_array}, {"cgnale.macro",wrappers_array+1}, {"cgnale.macros.get.create", wrappers_array+2}};
 }
