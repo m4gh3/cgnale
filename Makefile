@@ -2,13 +2,13 @@ INSTALL_BIN_PATH = $${HOME}/bin
 
 CXXFLAGS=-g
 
-all: build/cgnale build/cgnale_libs/libcgnale_base.so
+all: build/cgnale build/cgnale_libs/libcgnalec.so
 
 build/cgnale: cgnale.cpp
 	g++ $(CXXFLAGS) cgnale.cpp -ldl -o build/cgnale
 
-build/cgnale_libs/libcgnale_base.so: libcgnale_base.cpp
-	g++ $(CXXFLAGS) -shared libcgnale_base.cpp -fPIC -o build/cgnale_libs/libcgnale_base.so
+build/cgnale_libs/libcgnalec.so: libcgnalec.cpp
+	g++ $(CXXFLAGS) -shared libcgnalec.cpp -fPIC -o build/cgnale_libs/libcgnalec.so
 
 install:
 	cp build/cgnale ${INSTALL_BIN_PATH}
