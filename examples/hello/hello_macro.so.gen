@@ -1,0 +1,11 @@
+{:cgnale.macros.dataclass:}
+
+std::string heymsg = "heeyyy";
+
+{:cgnale.macro:hello:}
+{ ostr << "hello " << args[1] << " //{::hey:}" << std::endl; }
+
+{:cgnale.macro:hey:}
+{ ostr << heymsg; }
+
+// vim:ft=cpp
