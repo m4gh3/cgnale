@@ -8,7 +8,7 @@ struct expression
 	virtual bool unbind() = 0;
 };
 
-struct function : expression
+struct joint : expression
 {
 
 	std::vector<expression *> params; //maybe we should use smart pointers? we'll see
@@ -44,8 +44,10 @@ struct function : expression
 		return true;
 	}
 
-	virtual ~function()
+	virtual ~joint()
 	{
+		for( auto e : params )
+			delete e;
 	}
 
 };
@@ -53,4 +55,33 @@ struct function : expression
 struct bind : expression
 {
 	expression *binded;
+
+	bind()
+	{ binded = NULL; }
+
+	virtual void expression *clone()
+	{
+		if( binded != NULL )
+			return binded->clone();
+		else
+			return new bind;
+	}
+
+	virtual bool bind(expression *expr)
+	{
+		if( binded == NULL )
+		{
+			binded = expr;
+			return true;
+		}
+		else if( typeid(binded) == typeid(bind) )
+
+			return binded == expr;
+
+		else
+		{
+			return binded->bind(expr);
+		}
+	}
+
 };
