@@ -65,7 +65,7 @@ void macro_parse(std::istream &istr, std::ostream &ostr )
 		if( c == '\\' )
 		{
 			check_eof( c = istr.get() );
-			ostr << (char)subst_escape(c);
+			ostringstr << (char)subst_escape(c);
 		}
 		else if( c == ':' )
 		{
