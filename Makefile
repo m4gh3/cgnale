@@ -1,3 +1,5 @@
+# Copyright (C) 2021 m4gh3
+
 #This file is part of cgnale.
 
 #    cgnale is free software: you can redistribute it and/or modify
