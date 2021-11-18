@@ -186,8 +186,8 @@ void load_lib(char *path)
 
 	*(void **) (&cgnale_get_macros) = dlsym(libhandle, "cgnale_get_macros" );
 
-	for(auto [first,second] : cgnale_get_macros() )
-		macro_handlers[first] = second;
+	for(auto m : cgnale_get_macros() )
+		macro_handlers[m.first] = m.second;
 
 }
 
