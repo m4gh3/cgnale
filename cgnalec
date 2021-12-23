@@ -19,7 +19,7 @@ case $1 in
 	"dbg")
 		mkdir -p /tmp/cgnalec/
 		cgnale -l ~/.local/share/cgnale/cgnale_libs/libcgnalec.so -s "#include <cgnale.hpp>\n" -c $2.so.gen -s "{:cgnale.macros.get.create:}" > /tmp/cgnalec/$2.so.cpp
-		g++ -g $3 -shared /tmp/cgnalec/$2.so.cpp -fPIC -I ~/.local/share/cgnale/include -o lib$2.so
+		g++ -g $3 -shared /tmp/cgnalec/$2.so.cpp -fPIC -I . -I ~/.local/share/cgnale/include -o lib$2.so
 
 	;;
 	"clr")
